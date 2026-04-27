@@ -78,15 +78,7 @@ public class Gen
     {
         int i,j,k;
 
-        System.out.println("   M A T R I X  G E N.  ");
-        System.out.println("              N = "+ n);
-        System.out.println(" | lambda_min | = "+alpha);
-        System.out.println(" | lambda_max | = "+beta);
-
         double[] lambda = new double[n];
-
-        // распределение знаков
-        System.out.println(" sign_law = "+sign_law);
 
         double[] sign   = new double[n];
         for( i=0; i<n; i++ ) sign[i] = 1.;
@@ -106,24 +98,16 @@ public class Gen
             // ...
 
         }
-/*	for( i=0; i<n; i++ ) cout<<sign[i]<<" ";
-	cout<<endl;
-*/
-
-        //распределение собственнных чисел
-        System.out.println(" lambda_law = "+lambda_law);
 
         double[] kappa   = new double[n];
         for( i=0; i<n; i++ ) kappa[i] = (double)i/(double)(n-1);
         switch(lambda_law)
         {
             case 1:
-                System.out.println(" kappa = sqrt( ) ");
                 for( i=0; i<n; i++ ) kappa[i] = Math.sqrt( kappa[i] );
                 break;
 
             case 2:
-                System.out.println(" kappa = sin( ) ");
                 double pi_half = Math.acos(-1.)*0.5;
                 for( i=0; i<n; i++ ) kappa[i] = Math.sin( pi_half*kappa[i] );
                 break;
@@ -132,16 +116,10 @@ public class Gen
             // ...
 
         }
-/*	for( i=0; i<n; i++ ) cout<<kappa[i]<<" ";
-	cout<<endl;
-*/
-
 
         double[] J = new double[n];
         for( i=0; i<n; i++ ) J[i] = sign[i]*( ( 1.-kappa[i] )*alpha + kappa[i]*beta );
-/*	for( i=0; i<n; i++ ) cout<<J[i]<<" ";
-	cout<<endl;
-*/
+
 
         double[] J_inv = new double[n];
         for( i=0; i<n; i++ ) J_inv[i] = 1./J[i];
@@ -151,14 +129,9 @@ public class Gen
 
         double[] aa = new double[3];
 
-
-        System.out.println(" variant = "+variant);
-
         switch( variant )
         {
             case 0: //симметричная матрица
-                System.out.println(" simmetric matrix:");
-                System.out.println(" schema = "+schema);
                 switch( schema )
                 {
                     case 1:
@@ -200,13 +173,12 @@ public class Gen
 
                 }//schema
                 break;
-
             case 1: //матрица простой структуры
-                System.out.println(" simple structure matrix:");
-                System.out.println(" schema = "+schema);
                 switch( schema )
                 {
                     case 1:
+                        Q_matrix ( Q, n, schema );
+
                         //TJ
                         //первая строка
                         a[0][0] = J[0];
@@ -291,8 +263,8 @@ public class Gen
                 break;
 
             case 2: //одна жорданова клетка 2x2 при минимальном с.з.
-                System.out.println(" J_2 type matrix: must be n > 2");
-                System.out.println(" schema = "+schema);
+//              System.out.println(" J_2 type matrix: must be n > 2");
+//              System.out.println(" schema = "+schema);
 
                 switch( schema )
                 {
@@ -392,9 +364,8 @@ public class Gen
                         s = aa[0] + aa[0] + aa[1];
                         for(j=0; j<n-1; j++ ) a_inv[n-1][j] = s;
                         a_inv[n-1][n-1] = aa[0] + aa[1];
-
-
                         break;
+
                 }//schema
 
                 break;
@@ -406,30 +377,23 @@ public class Gen
         double norm,norm_inv;
 
         norm = matr_inf_norm ( a, n );
-        System.out.println(" ||  A  || = " + norm );
+        // System.out.println(" ||  A  || = " + norm );
 
         norm_inv = matr_inf_norm ( a_inv, n );
-        System.out.println(" ||A_inv|| = " + norm_inv );
+        // System.out.println(" ||A_inv|| = " + norm_inv );
 
         double obusl = norm*norm_inv;
-        System.out.println(" obusl = " + obusl );
+        // System.out.println(" obusl = " + obusl );
 
         //невязка генерации
-        double[][] r = new double [n][];
-        for( i = 0; i < n; i++ )
-            r[i] = new double [n];
-        matr_mul ( a, a_inv, r, n );
-        for( i = 0; i < n; i++ ) r[i][i] -= 1.;
+        // double[][] r = new double [n][];
+        // for( i = 0; i < n; i++ )
+        //     r[i] = new double [n];
+        // matr_mul ( a, a_inv, r, n );
+        // for( i = 0; i < n; i++ ) r[i][i] -= 1.;
 
-/*	cout << "r:" << endl;
-	for( i = 0; i < n; i++ )
-	{
-		for( j = 0; j < n; j++ ) cout << " " << r[i][j];
-		cout << endl;
-	}
-*/
-        norm = matr_inf_norm ( r, n );
-        System.out.println(" ||R_gen|| = " + norm );
+        // norm = matr_inf_norm ( r, n );
+        // System.out.println(" ||R_gen|| = " + norm );
 
 
     }//mygen
